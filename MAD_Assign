@@ -1,0 +1,67 @@
+// Shopping cart array to store items
+let cart = [];
+
+// 1. Add Items to the Cart
+const addItemToCart = (productId, productName, quantity, price, category, brand, description) => {
+    cart.push({ productId, productName, quantity, price, category, brand, description });
+};
+
+// 2. Remove and Update Items
+// Remove item from cart by productId
+const removeItemFromCart = (productId) => {
+    const index = cart.findIndex(item => item.productId === productId);
+    if (index !== -1) {
+        cart.splice(index, 1);
+    }
+};
+
+// Update item quantity
+const updateItemQuantity = (productId, newQuantity) => {
+    cart = cart.map(item => item.productId === productId ? { ...item, quantity: newQuantity } : item);
+};
+
+// 3. Calculate Total Cost
+const calculateTotalCost = () => {
+    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+};
+
+// 4. Display Cart Summary
+const displayCartSummary = () => {
+    const summary = cart.map(item => ({
+        productName: item.productName,
+        quantity: item.quantity,
+        totalPrice: item.price * item.quantity,
+        category: item.category,  // Added the missing comma here
+        brand: item.brand,
+        description: item.description
+    }));
+
+    // Displaying summary
+    summary.forEach(item => {
+        console.log(`${item.productName} (Category: ${item.category}, Brand: ${item.brand}) - Quantity: ${item.quantity}, Total Price: ${item.totalPrice}`);
+        console.log(`Description: ${item.description}\n`);
+    });
+
+    // Filter out items with zero quantity
+    cart = cart.filter(item => item.quantity > 0);
+};
+
+// 5. Apply Discount Code
+const applyDiscount = (discountCode) => {
+    const discountPercent = discountCode === "DISCOUNT10" ? 0.1 : 0;
+    const totalCost = calculateTotalCost();
+    const discountedTotal = totalCost - (totalCost * discountPercent);
+    console.log(`Total after discount: ${discountedTotal}`);
+};
+
+addItemToCart(1, "Foundation", 1, 1200, "Cosmetics", "Missrose", "Matte water prof hjgh coverage foundation for fair comolexion");
+addItemToCart(2, "Primer", 1, 500, "Cosmetics", "Loreal", "Best primer for open pores. Apply after moisturiser and before foundation for better results");
+addItemToCart(3, "Eyeliner", 3, 3000, "Cosmetics", "Missrose", "Waterproof eyeliner");
+addItemToCart(4, "Bob Mascara", 1, 1500, "Cosmetics", "BOB", "Waterproof Mascara");
+
+updateItemQuantity(2, 3); // Updating quantity of Primer
+
+displayCartSummary(); // Display the cart summary
+
+applyDiscount("DISCOUNT10"); // Applying a discount code
+
